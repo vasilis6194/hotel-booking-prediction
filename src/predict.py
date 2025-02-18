@@ -41,7 +41,7 @@ def eda_preprocess(df):
     except Exception as e:
         print("Warning: IsolationForest step encountered an error:", e)
     
-    # Drop useless columns (adjust this list as used in training)
+    # Drop useless columns 
     useless_cols = ['days_in_waiting_list', 'arrival_date_year', 'arrival_date_month', 
                     'assigned_room_type', 'booking_changes', 'reservation_status', 'country']
     df.drop(columns=useless_cols, errors='ignore', inplace=True)
