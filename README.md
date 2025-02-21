@@ -1,4 +1,4 @@
-# Hospitality Predictive Analytics: End-to-End ML Pipeline 🚀
+# Hospitality Predictive Analytics: End-to-End ML Pipeline (In progress) 🚀
 
 ## Overview
 This project builds an end-to-end predictive analytics pipeline for the hospitality industry. It tackles two major tasks:
