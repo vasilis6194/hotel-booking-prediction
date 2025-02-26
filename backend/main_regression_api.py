@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import joblib
 import pandas as pd
@@ -7,6 +8,14 @@ from sklearn.impute import SimpleImputer
 from sklearn.ensemble import IsolationForest
 
 app = FastAPI(title="Hospitality ADR Regression API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow requests from any frontend (use frontend's URL in production)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
 
 # -------------------------------
 # Constants & Paths
@@ -76,7 +85,7 @@ def eda_preprocess_regression(df: pd.DataFrame) -> pd.DataFrame:
     if cat_cols:
         df = pd.get_dummies(df, columns=cat_cols, drop_first=False, dtype=int)
 
-    # 🚀 **NEW FIX: Ensure 'adr' is removed if it still exists**
+    #Ensure 'adr' is removed if it still exists
     df.drop(columns=['adr'], errors='ignore', inplace=True)
 
     return df
@@ -99,7 +108,7 @@ def preprocess_for_prediction_regression(input_df: pd.DataFrame, expected_featur
     # Load saved dummy column names from training
     try:
         saved_dummy_columns = joblib.load(DUMMY_COLUMNS_PATH)
-        print("✅ Loaded Dummy Columns:", saved_dummy_columns)
+        print("Loaded Dummy Columns:", saved_dummy_columns)
     except FileNotFoundError:
         raise RuntimeError(f"Missing required file: {DUMMY_COLUMNS_PATH}. Ensure it's created during training.")
     
@@ -139,7 +148,7 @@ def predict_adr(input_data: RegressionInput):
         # Convert the input dictionary into a DataFrame (assumes single record; can be extended for batch)
         input_df = pd.DataFrame([input_data.features])
         
-        # 🚀 Pass expected_features_reg explicitly
+        # Pass expected_features_reg explicitly
         X = preprocess_for_prediction_regression(input_df, expected_features_reg)
 
         # Predict in log-space using the loaded pipeline

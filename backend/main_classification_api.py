@@ -5,8 +5,19 @@ import pandas as pd
 import numpy as np
 from sklearn.ensemble import IsolationForest
 from sklearn.impute import SimpleImputer
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI(title="Hospitality Cancellation Classification API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow requests from any frontend (use frontend's URL in production)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
+
 
 # --- EDA Preprocessing for Classification ---
 def eda_preprocess(df: pd.DataFrame) -> pd.DataFrame:
@@ -64,21 +75,39 @@ def eda_preprocess(df: pd.DataFrame) -> pd.DataFrame:
     
     return df
 
-def preprocess_for_prediction_classification(input_df: pd.DataFrame, expected_features: list) -> pd.DataFrame:
+
+
+def preprocess_for_prediction_classification(input_df):
     """
-    Preprocess input data for cancellation classification.
-    - Applies eda_preprocess.
-    - Removes target columns ('is_canceled', 'adr').
-    - Ensures all expected features (from training) are present (adding missing ones with default 0).
-    - Reorders columns to match expected_features.
+    Preprocess input data for classification.
+    - Applies EDA preprocessing.
+    - One-hot encodes categorical features.
+    - Adds missing features with default value (0).
+    - Reorders the DataFrame to match training columns.
     """
     df = eda_preprocess(input_df.copy())
-    df = df.drop(columns=['is_canceled', 'adr'], errors='ignore')
-    for col in expected_features:
+
+    # Load saved categorical dummy column names from training
+    DUMMY_COLUMNS_PATH = r"C:\Users\user\Desktop\Github\Hotel booking prediction\hotel-booking-prediction\models\classification_dummy_columns.pkl"
+    
+    try:
+        saved_dummy_columns = joblib.load(DUMMY_COLUMNS_PATH)
+    except FileNotFoundError:
+        raise RuntimeError(f"Missing required file: {DUMMY_COLUMNS_PATH}. Ensure it's created during training.")
+
+    # 🔍 **Ensure all expected categorical dummies exist**
+    for col in saved_dummy_columns:
         if col not in df.columns:
-            df[col] = 0
-    df = df[expected_features]
+            df[col] = 0  # Add missing columns with default value 0
+
+    # ✅ **Reorder columns to match training**
+    df = df[saved_dummy_columns]
+
+    print("✅ FINAL Features Sent to Model:", df.columns.tolist())  # Debugging
     return df
+
+
+
 
 # --- Load Saved Classification Model ---
 # Hardcoded path for the classification model saved during training.
@@ -102,24 +131,30 @@ def predict_cancellation(input_data: ClassificationInput):
     try:
         # Convert input dictionary to DataFrame (assumes a single record)
         input_df = pd.DataFrame([input_data.features])
-        
+
+        # 🚀 Print raw input before processing
+        print("🔍 Raw Input Data:\n", input_df)
+
         # Preprocess input to ensure it has exactly the expected feature columns
-        X = preprocess_for_prediction_classification(input_df, expected_features_class)
-        
+        X = preprocess_for_prediction_classification(input_df)
+
         # Predict cancellation using the loaded pipeline
         prediction = model_pipeline_class.predict(X)[0]
-        # Also get probability for cancellation (assuming class '1' indicates cancellation)
+
+        # Get probability for cancellation (assuming class '1' indicates cancellation)
         prob = model_pipeline_class.predict_proba(X)[0][1]
         cancellation_percentage = prob * 100
-        
+
         return {
             "predicted_class": int(prediction),
             "cancellation_probability": round(cancellation_percentage, 2)
         }
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 # --- Run the Application ---
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8001)
