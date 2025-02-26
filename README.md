@@ -1,58 +1,105 @@
-# Hospitality Predictive Analytics: End-to-End ML Pipeline (In progress) 🚀
+# Hospitality Predictive Analytics: End-to-End ML Pipeline  
+**Real-time Booking Cancellation & ADR Prediction System**  
 
-## Overview
-This project builds an end-to-end predictive analytics pipeline for the hospitality industry. It tackles two major tasks:
-- **Classification:** Predicting booking cancellations.
-- **Regression:** Forecasting Average Daily Rate (ADR).
+## 📖 Overview
+This project builds an **end-to-end predictive analytics pipeline** for the hospitality industry, focusing on two critical tasks:  
+1. **Booking Cancellation Prediction (Classification)**: Predict whether a hotel booking will be canceled.  
+2. **Average Daily Rate (ADR) Prediction (Regression)**: Forecast the price per night for a booking.  
 
-The solution is designed to deliver actionable insights for revenue management and strategic pricing while being production-ready with an API built using FastAPI and containerized with Docker.
+The solution is production-ready, providing **real-time predictions** through an API built with **FastAPI**, a frontend built with **React**, and containerized with **Docker** for easy deployment.  
 
-## Project Targets 🎯
-- **Predict Cancellation:** Use classification models to forecast whether a booking will be canceled.
-- **Forecast ADR:** Use regression models (with target log-transformation to handle skewness) to predict ADR.
-- **Deployment:** Serve predictions in real time via a FastAPI endpoint and Docker for scalability.
-- **Optimization:** Leverage advanced feature engineering, Bayesian hyperparameter tuning with Optuna, robust imputation, outlier handling, and proper data preprocessing.
+---
 
-## Process & Workflow 🔄
+## 🎯 **Project Goals**
+✔️ **Predict Booking Cancellations** – Optimize hotel management and reduce lost revenue.  
+✔️ **Forecast ADR** – Improve dynamic pricing strategies for hotels.  
+✔️ **Deployment-Ready** – Serve predictions via API & Docker for scalability.  
+✔️ **Model Optimization** – Use feature engineering, Optuna-based hyperparameter tuning, and outlier handling.  
 
-1. **Data Collection & EDA** 🔍  
-   - Gathered historical hotel booking data.
-   - Performed comprehensive exploratory data analysis (EDA) with Pandas and visualizations with Matplotlib/Seaborn.
-   - Cleaned the data by removing leakage-prone features (e.g., booking_changes, assigned_room_type) and rows with no guests.
+---
 
-2. **Feature Engineering & Preprocessing** ⚙️  
-   - Extracted date features from reservation dates (year, month, day, weekday).
-   - Applied imputation (median for numerics, mode for categoricals) and one-hot encoding.
-   - Handled outliers with IsolationForest.
-   - Implemented target transformation (using `np.log1p` for ADR) to reduce skewness.
+## 🔄 **Workflow & Implementation**
 
-3. **Modeling & Tuning** 📊  
-   - **Classification:** Evaluated models like CatBoostClassifier, RandomForestClassifier, and XGBoostClassifier.
-   - **Regression:** Evaluated models such as CatBoostRegressor, XGBoostRegressor, and RandomForestRegressor.
-   - **Hyperparameter Tuning:** Used Bayesian optimization with Optuna to fine-tune the regression model.  
-     **Best Regression Model Results:**  
-     - **Best Trial:**  
-       - Value (mean neg MSE): `-0.17181247463698596`  
-       - Parameters:  
-         - `select_k_best__k`: 30  
-         - `model__depth`: 10  
-         - `model__learning_rate`: 0.06131215422518232  
-         - `model__iterations`: 350  
-     - **Final Evaluation on Test Set:**  
-       - RMSE: **24.08**  
-       - MAE: **16.10**  
-       - R²: **0.73**
+### **1️⃣ Data Collection & Preprocessing**
+📌 **Steps Taken:**  
+- ✅ Collected **hotel booking data** and explored data distributions.  
+- ✅ **Feature Engineering** – Extracted date-based features (**year, month, weekday**).  
+- ✅ **Handled missing values** with median/mode imputation.  
+- ✅ **One-hot encoded categorical features** to prepare for ML models.  
+- ✅ **Filtered out invalid bookings** (e.g., those with no guests).  
+- ✅ **Handled outliers** using **IsolationForest**.  
 
-4. **Deployment** 💻  
-   - Built a production-ready API using **FastAPI**.
-   - Containerized the solution using **Docker** for scalable deployment.
-   - The final model pipelines (both classification and regression) are saved with joblib for easy loading in production.
+---
 
-## Technology Stack 🛠️
-- **Programming & Data Processing:** Python, Pandas, NumPy
-- **Machine Learning:** scikit-learn, CatBoost, XGBoost, RandomForest
-- **Hyperparameter Tuning:** Optuna, SelectKbest
-- **Visualization:** Matplotlib, Seaborn
-- **Deployment:** FastAPI, Docker
-- **Others:** IsolationForest, One-Hot Encoding, Target Transformation (log)
+### **2️⃣ Model Training & Tuning**
+📌 **Classification (Cancellation Prediction)**  
+- 🔹 **Models Evaluated**: CatBoost, RandomForest, XGBoost.  
+- 🔹 **Final Model**: CatBoostClassifier.  
+- 🔹 **Hyperparameter Tuning**: Used **Optuna** for Bayesian optimization.  
 
+📌 **Regression (ADR Prediction)**  
+- 🔹 **Models Evaluated**: CatBoostRegressor, XGBoost, RandomForest.  
+- 🔹 **Final Model**: **CatBoostRegressor with Log-Transformed ADR** for improved predictions.  
+- 🔹 **Hyperparameter Tuning**: **Optuna** optimized the model hyperparameters.  
+
+**Best Regression Model Results:**  
+- **RMSE:** 24.08  
+- **MAE:** 16.10  
+- **R²:** 0.73  
+
+---
+
+### **3️⃣ API Development with FastAPI**
+📌 **Implemented API Endpoints:**  
+- ✅ `POST /predict/cancellation` – Predicts whether a booking will be canceled.  
+- ✅ `POST /predict/adr` – Predicts the Average Daily Rate (ADR).  
+- ✅ **Input validation** to prevent incorrect data entry.  
+
+---
+
+### **4️⃣ Frontend Development (React)**
+📌 **Features:**  
+- ✅ **Two Forms for Predictions** – Separate forms for ADR prediction and cancellation prediction.  
+- ✅ **Dropdowns for categorical fields** like Hotel Type, Meal Type, Room Type, etc.  
+- ✅ **Form validation** to prevent invalid user inputs.  
+- ✅ **Real-time API integration** with `axios` for fetching predictions.  
+
+---
+
+## 🚀 **Deployment using Docker**
+This project is containerized using **Docker** with separate services for:  
+- **Regression Model Backend** (Port **8000**)  
+- **Classification Model Backend** (Port **8001**)  
+- **Frontend (React)** (Port **3000**)  
+
+### **1️⃣ Docker Setup**
+✅ Ensure you have **Docker** installed.  
+✅ Clone the repository:  
+```bash
+git clone https://github.com/vasilis6194/hotel-booking-prediction.git
+cd hotel-booking-prediction
+```
+✅ Build & Run Containers using Docker Compose:
+
+```bash
+docker-compose up --build
+```
+✅ Stop containers when done:
+
+```bash
+docker-compose down
+```
+
+### 🔧**Using the Application**
+- 1️⃣ Run the Application (via Docker Compose or manually).
+- 2️⃣ Open your browser and go to http://localhost:3000.
+- 3️⃣ Select the prediction type: ADR or Cancellation.
+- 4️⃣ Fill in the form fields and click Predict.
+- 5️⃣ View real-time predictions on the screen! 🎉
+
+### 📌 **Next Steps**
+- 🚀 Deploy on a Cloud Server (AWS, Google Cloud, or DigitalOcean).
+- 📊 Store Predictions in a Database (PostgreSQL/MongoDB).
+- 🔐 Add User Authentication (JWT, OAuth).
+- 📉 Enable Batch Predictions (Upload CSV files for bulk processing).
+- 📧 Send Email Alerts for High Cancellation Probabilities.
