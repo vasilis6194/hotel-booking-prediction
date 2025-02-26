@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  regression-backend:
+    build: ./backend_regression
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend_regression:/app
+      - ./backend_regression/models:/app/models  # Mount model files
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: always
+    command: uvicorn main_regression_api:app --host 0.0.0.0 --port 8000 --reload
+
+  classification-backend:
+    build: ./backend_classification
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./backend_classification:/app
+      - ./backend_classification/models:/app/models  # Mount model files
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: always
+    command: uvicorn main_classification_api:app --host 0.0.0.0 --port 8001 --reload
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - regression-backend
+      - classification-backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # Ensure node_modules is not overwritten
+    stdin_open: true
+    tty: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Fix for hot reloading in some environments

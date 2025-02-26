@@ -1,0 +1,35 @@
+# Ignore Python cache, virtual environments, and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+venv/
+env/
+*.egg-info/
+
+# Ignore Node.js dependencies (except for the necessary package.json and package-lock.json)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Ignore Docker-related files
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Ignore IDE and editor settings
+.vscode/
+.idea/
+*.iml
+
+# Ignore environment files (if any)
+.env
+.env.local
+.env.production
+.env.test
+
+# Ignore logs and temporary files
+logs/
+*.log
+tmp/
