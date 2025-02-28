@@ -66,7 +66,7 @@ This project is an **end-to-end machine learning pipeline** designed for the **h
 *   **RMSE:** 24.08
 *   **MAE:** 16.10
 *   **R²:** 0.73
-*   **Accuracy:** 85%
+*   **Accuracy:** 87%
     
 
 ### **3️⃣ API Development with FastAPI**
