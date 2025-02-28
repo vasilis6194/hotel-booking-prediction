@@ -1,105 +1,181 @@
-# Hospitality Predictive Analytics: End-to-End ML Pipeline  
-**Real-time Booking Cancellation & ADR Prediction System**  
+Hospitality Predictive Analytics: End-to-End ML Pipeline with AWS Deployment
+============================================================================
 
-## 📖 Overview
-This project builds an **end-to-end predictive analytics pipeline** for the hospitality industry, focusing on two critical tasks:  
-1. **Booking Cancellation Prediction (Classification)**: Predict whether a hotel booking will be canceled.  
-2. **Average Daily Rate (ADR) Prediction (Regression)**: Forecast the price per night for a booking.  
+🌍 **Live Application**: [https://hotel-app.duckdns.org](https://hotel-app.duckdns.org)
+---------------------------------------------------------------------------------------
 
-The solution is production-ready, providing **real-time predictions** through an API built with **FastAPI**, a frontend built with **React**, and containerized with **Docker** for easy deployment.  
+📖 **Overview**
+---------------
 
----
+This project is an **end-to-end machine learning pipeline** designed for the **hospitality industry**, capable of real-time **Booking Cancellation Prediction** and **Average Daily Rate (ADR) Forecasting**. It is **fully deployed on AWS**, leveraging **FastAPI**, **React**, **Docker**, and **Nginx**, with HTTPS secured via **Let's Encrypt**.
 
-## 🎯 **Project Goals**
-✔️ **Predict Booking Cancellations** – Optimize hotel management and reduce lost revenue.  
-✔️ **Forecast ADR** – Improve dynamic pricing strategies for hotels.  
-✔️ **Deployment-Ready** – Serve predictions via API & Docker for scalability.  
-✔️ **Model Optimization** – Use feature engineering, Optuna-based hyperparameter tuning, and outlier handling.  
+🚀 **Key Achievements**
+-----------------------
 
----
+- ✅ **Cloud Deployment with AWS EC2** – Hosted the complete application in the cloud.
+- ✅ **Domain & HTTPS Setup** – Configured **DuckDNS** for a free domain & **Let's Encrypt** for SSL.
+- ✅ **Production-Ready API** – Built using **FastAPI**, handling real-time predictions.
+- ✅ **Scalable Architecture** – Containerized **backend, frontend, and API** using **Docker**.
+- ✅ **Reverse Proxy with Nginx** – Optimized request handling for improved performance.
+- ✅ **Security & Networking** – Configured AWS **security groups, firewall (UFW), and Nginx**.
 
-## 🔄 **Workflow & Implementation**
+🎯 **Project Goals**
+--------------------
+
+- ✔️ **Predict Booking Cancellations** – Helps hotels optimize revenue and reduce losses.
+- ✔️ **Forecast ADR** – Supports dynamic pricing strategies.
+- ✔️ **Cloud Deployment** – Ensures real-time access with AWS & Docker.
+- ✔️ **Model Optimization** – Includes feature engineering, Optuna hyperparameter tuning, and outlier handling.
+
+🔄 **Workflow & Implementation**
+--------------------------------
 
 ### **1️⃣ Data Collection & Preprocessing**
-📌 **Steps Taken:**  
-- ✅ Collected **hotel booking data** and explored data distributions.  
-- ✅ **Feature Engineering** – Extracted date-based features (**year, month, weekday**).  
-- ✅ **Handled missing values** with median/mode imputation.  
-- ✅ **One-hot encoded categorical features** to prepare for ML models.  
-- ✅ **Filtered out invalid bookings** (e.g., those with no guests).  
-- ✅ **Handled outliers** using **IsolationForest**.  
 
----
+📌 **Key Steps:**
 
-### **2️⃣ Model Training & Tuning**
-📌 **Classification (Cancellation Prediction)**  
-- 🔹 **Models Evaluated**: CatBoost, RandomForest, XGBoost.  
-- 🔹 **Final Model**: CatBoostClassifier.  
-- 🔹 **Hyperparameter Tuning**: Used **Optuna** for Bayesian optimization.  
+*   **Collected & cleaned** hotel booking data.
+    
+*   **Feature Engineering** – Extracted **date-based** features (year, month, weekday).
+    
+*   **One-hot encoded categorical variables** & handled missing values.
+    
+*   **Filtered invalid bookings** (e.g., zero guests).
+    
+*   **Used IsolationForest** to handle outliers.
+    
 
-📌 **Regression (ADR Prediction)**  
-- 🔹 **Models Evaluated**: CatBoostRegressor, XGBoost, RandomForest.  
-- 🔹 **Final Model**: **CatBoostRegressor with Log-Transformed ADR** for improved predictions.  
-- 🔹 **Hyperparameter Tuning**: **Optuna** optimized the model hyperparameters.  
+### **2️⃣ Model Training & Optimization**
 
-**Best Regression Model Results:**  
-- **RMSE:** 24.08  
-- **MAE:** 16.10  
-- **R²:** 0.73  
+📌 **Classification (Booking Cancellation Prediction)**
 
----
+*   **Models Evaluated:** CatBoost, RandomForest, XGBoost.
+    
+*   **Best Model:** CatBoostClassifier .
+    
+
+📌 **Regression (ADR Prediction)**
+
+*   **Models Evaluated:** CatBoostRegressor, XGBoost, RandomForest.
+    
+*   **Best Model:** **CatBoostRegressor** with **Log-Transformed ADR**  (Optimized via **Optuna**) for better predictions.
+    
+
+#### **Final Regression and Classification Model Results:**
+
+*   **RMSE:** 24.08
+*   **MAE:** 16.10
+*   **R²:** 0.73
+*   **Accuracy:** 85%
+    
 
 ### **3️⃣ API Development with FastAPI**
-📌 **Implemented API Endpoints:**  
-- ✅ `POST /predict/cancellation` – Predicts whether a booking will be canceled.  
-- ✅ `POST /predict/adr` – Predicts the Average Daily Rate (ADR).  
-- ✅ **Input validation** to prevent incorrect data entry.  
 
----
+📌 **Endpoints:**
+
+*   POST /predict/cancellation – Predicts whether a booking will be canceled.
+    
+*   POST /predict/adr – Predicts the Average Daily Rate (ADR).
+    
+*   Includes **input validation & error handling**.
+    
 
 ### **4️⃣ Frontend Development (React)**
-📌 **Features:**  
-- ✅ **Two Forms for Predictions** – Separate forms for ADR prediction and cancellation prediction.  
-- ✅ **Dropdowns for categorical fields** like Hotel Type, Meal Type, Room Type, etc.  
-- ✅ **Form validation** to prevent invalid user inputs.  
-- ✅ **Real-time API integration** with `axios` for fetching predictions.  
 
----
+📌 **Features:**
 
-## 🚀 **Deployment using Docker**
-This project is containerized using **Docker** with separate services for:  
-- **Regression Model Backend** (Port **8000**)  
-- **Classification Model Backend** (Port **8001**)  
-- **Frontend (React)** (Port **3000**)  
+*   **Interactive UI** for booking cancellation & ADR prediction.
+    
+*   **Dropdowns & form validation** for structured inputs.
+    
+*   **Real-time API calls** via axios.
+    
 
-### **1️⃣ Docker Setup**
-✅ Ensure you have **Docker** installed.  
-✅ Clone the repository:  
+🏗 **Deployment on AWS (Step-by-Step)**
+---------------------------------------
+
+### **1️⃣ AWS EC2 Setup**
+
+- ✅ Launched an **Ubuntu 22.04** EC2 instance.
+- ✅ Configured **security groups** to allow HTTP (80), HTTPS (443), API (8000, 8001).
+- ✅ Set up an **Elastic IP** for a static public IP.
+
+### **2️⃣ Docker & Application Setup**
+
+- ✅ **Installed Docker & Docker Compose** for containerized deployment.
+- ✅ **Transferred project files** to the AWS instance using scp.
+- ✅ **Built and ran the application** using docker-compose up --build -d.
+
+### **3️⃣ Reverse Proxy with Nginx**
+
+- ✅ Installed & configured **Nginx** as a **reverse proxy**.
+- ✅ Ensured traffic from **port 80/443 → React frontend (3000)**.
+- ✅ Added HTTPS **SSL certificates** using **Certbot (Let's Encrypt)**.
+
+### **4️⃣ Domain & SSL**
+
+- ✅ Registered a **free domain with DuckDNS** (hotel-app.duckdns.org).
+- ✅ Configured **Let's Encrypt SSL** for HTTPS (certbot).
+- ✅ Successfully hosted a **secure, public web application**.
+
+🔧 **Running the Application**
+------------------------------
+### **1️⃣ Access the Application**
+
+*   Visit: [**https://hotel-app.duckdns.org**](https://hotel-app.duckdns.org)
+*   Make predictions for **booking cancellations & ADR**.
+
+### **2️⃣ Clone & Deploy Locally**
+
 ```bash
 git clone https://github.com/vasilis6194/hotel-booking-prediction.git
 cd hotel-booking-prediction
-```
-✅ Build & Run Containers using Docker Compose:
-
-```bash
 docker-compose up --build
 ```
-✅ Stop containers when done:
+
+### **3️⃣ Stop Containers**
 
 ```bash
-docker-compose down
+docker-compose down  
 ```
+  
 
-### 🔧**Using the Application**
-- 1️⃣ Run the Application (via Docker Compose or manually).
-- 2️⃣ Open your browser and go to http://localhost:3000.
-- 3️⃣ Select the prediction type: ADR or Cancellation.
-- 4️⃣ Fill in the form fields and click Predict.
-- 5️⃣ View real-time predictions on the screen! 🎉
+    
 
-### 📌 **Next Steps**
-- 🚀 Deploy on a Cloud Server (AWS, Google Cloud, or DigitalOcean).
-- 📊 Store Predictions in a Database (PostgreSQL/MongoDB).
-- 🔐 Add User Authentication (JWT, OAuth).
-- 📉 Enable Batch Predictions (Upload CSV files for bulk processing).
-- 📧 Send Email Alerts for High Cancellation Probabilities.
+
+
+📌 **Key Learnings & Skills Acquired**
+--------------------------------------
+
+### **Cloud & Deployment**
+
+- ✅ **AWS EC2** – Launched & configured a cloud instance.
+- ✅ **Docker & Docker Compose** – Containerized ML models & frontend.
+- ✅ **Nginx Reverse Proxy** – Managed traffic routing & API requests.
+- ✅ **Let's Encrypt & Certbot** – Enabled **free HTTPS encryption**.
+- ✅ **Firewall & Security Groups** – Configured UFW & AWS rules.
+- ✅ **Domain Configuration** – Used **DuckDNS** for free custom domains.
+
+### **Software Development**
+
+- ✅ **FastAPI & React Integration** – Built a complete ML web app.
+- ✅ **REST API Development** – Created & tested ML model endpoints.
+- ✅ **State Management & API Calls** – Used Axios & React Hooks.
+- ✅ **Frontend-Backend Communication** – Structured requests & error handling.
+
+🚀 **Next Steps**
+-----------------
+
+*   **Integrate PostgreSQL** – Store predictions for analytics.
+    
+*   **Implement Authentication** – Secure API endpoints.
+    
+*   **Enable Batch Predictions** – Support CSV uploads.
+    
+*   **Improve UI/UX** – Enhance frontend design & user experience.
+    
+
+🎯 **Final Thoughts**
+---------------------
+
+This project was an incredible learning experience, covering **cloud deployment, containerization, web development, API integration, security, and networking**. Now, anyone can access and use the model **in real-time** at [**hotel-app.duckdns.org**](https://hotel-app.duckdns.org)! 🚀🔥
